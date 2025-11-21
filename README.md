@@ -37,6 +37,9 @@ pnpm db:seed
 
 # Run all applications in development mode
 pnpm dev
+
+# Run all tests
+pnpm test
 ```
 
 Once started, access:

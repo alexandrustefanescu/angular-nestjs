@@ -7,7 +7,6 @@ export default defineConfig({
     globals: true,
     root: './',
     exclude: ['node_modules', 'dist', '.idea', '.git', '.cache'],
-    setupFiles: ['./test/setup.ts'],
   },
   plugins: [
     swc.vite({
