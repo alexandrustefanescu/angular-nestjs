@@ -18,7 +18,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Backend REST API')
-    .setDescription('NestJS Backend API with PostgreSQL and Prisma ORM')
+    .setDescription('NestJS Backend API with PostgreSQL and TypeORM')
     .setVersion('1.0')
     .addTag('todos', 'Todo CRUD operations')
     .addServer('http://localhost:3001', 'Local development')

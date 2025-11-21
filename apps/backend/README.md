@@ -1,6 +1,6 @@
 # Backend - NestJS Todo API
 
-A production-ready REST API built with NestJS, Fastify, and PostgreSQL using Prisma ORM. This backend provides a complete CRUD interface for managing todos with security best practices, comprehensive validation, and API documentation.
+A production-ready REST API built with NestJS, Fastify, and PostgreSQL using TypeORM. This backend provides a complete CRUD interface for managing todos with security best practices, comprehensive validation, and API documentation.
 
 ## 📋 Table of Contents
 
@@ -35,11 +35,8 @@ cp .env.example .env
 # Start PostgreSQL (using Docker)
 docker-compose up -d
 
-# Generate Prisma Client
-pnpm exec prisma generate
-
 # Run database migrations
-pnpm exec prisma migrate dev
+pnpm exec typeorm migration:run
 
 # Start development server
 pnpm dev
@@ -52,7 +49,7 @@ The API will be available at `http://localhost:3001`
 - **Framework:** NestJS 11 - Enterprise-grade Node.js framework
 - **HTTP Server:** Fastify - High-performance HTTP framework
 - **Database:** PostgreSQL 14+ - Robust relational database
-- **ORM:** Prisma 7 - Type-safe database toolkit
+- **ORM:** TypeORM - Elegant type-safe database ORM with decorators
 - **Validation:** class-validator & class-transformer
 - **API Docs:** Swagger/OpenAPI - Auto-generated documentation
 - **Testing:** Vitest - Fast unit testing framework
@@ -70,11 +67,6 @@ apps/backend/
          config/           # Configuration files
 
       modules/              # Feature modules
-         prisma/           # Database module
-            prisma.module.ts
-            prisma.service.ts
-            prisma.client.ts
-
          todos/            # Todos feature module
              todos.module.ts
              todos.service.ts
@@ -89,8 +81,7 @@ apps/backend/
       main.ts               # Application bootstrap
 
    test/                     # E2E tests
-   prisma/                   # Database schema & migrations
-      schema.prisma         # Prisma schema definition
+   database/                 # TypeORM database configuration
       migrations/           # Database migration history
 
    .env.example              # Environment variables template
@@ -237,34 +228,42 @@ Password: postgres
 ### Initialize Database
 
 ```bash
-# Generate Prisma Client based on schema
-pnpm exec prisma generate
+# Run TypeORM migrations
+pnpm exec typeorm migration:run
 
-# Create database and run migrations
-pnpm exec prisma migrate dev
+# Generate a new migration after entity/schema changes
+pnpm exec typeorm migration:generate src/database/migrations/AddFeatureName
 
-# Create a new migration after schema changes
-pnpm exec prisma migrate dev --name add_feature_name
+# Revert the last migration
+pnpm exec typeorm migration:revert
 
-# View and manage database with Prisma Studio
-pnpm exec prisma studio
-
-# Reset database (development only)
-pnpm exec prisma db push --force-reset
+# Synchronize database schema (development only)
+pnpm exec typeorm schema:sync
 ```
 
 ### Database Schema
 
-```prisma
-model Todo {
-  id          Int      @id @default(autoincrement())
-  title       String
-  description String?
-  isCompleted Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+The Todo entity is defined using TypeORM decorators in `src/entities/todo.entity.ts`:
 
-  @@map("todos")
+```typescript
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+
+@Entity('todos')
+export class Todo {
+  @PrimaryGeneratedColumn('increment')
+  id: number;
+
+  @Column('varchar', { length: 255 })
+  title: string;
+
+  @Column('boolean', { default: false })
+  isCompleted: boolean;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
 ```
 
@@ -298,9 +297,9 @@ pnpm lint             # Run ESLint with auto-fix
 pnpm format           # Format code with Prettier
 
 # Database
-pnpm prisma:generate  # Generate Prisma Client
-pnpm prisma:migrate   # Create and run migrations
-pnpm prisma:studio    # Open Prisma Studio
+pnpm typeorm:migration:generate  # Generate a new migration
+pnpm typeorm:migration:run        # Run all migrations
+pnpm typeorm:migration:revert     # Revert the last migration
 
 # Testing
 pnpm test             # Run unit tests
@@ -367,15 +366,27 @@ pnpm test:e2e --watch
 ```typescript
 describe('TodosService', () => {
   let service: TodosService;
-  let prisma: PrismaService;
+  let repository: Repository<Todo>;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
-      providers: [TodosService, PrismaService],
+      providers: [
+        TodosService,
+        {
+          provide: getRepositoryToken(Todo),
+          useValue: {
+            create: vi.fn(),
+            save: vi.fn(),
+            find: vi.fn(),
+            findOne: vi.fn(),
+            remove: vi.fn(),
+          },
+        },
+      ],
     }).compile();
 
     service = module.get<TodosService>(TodosService);
-    prisma = module.get<PrismaService>(PrismaService);
+    repository = module.get<Repository<Todo>>(getRepositoryToken(Todo));
   });
 
   it('should create a todo', async () => {
@@ -427,13 +438,15 @@ pnpm exec tsc --noEmit
 
 The application uses NestJS modules for feature organization:
 
-**PrismaModule** - Database connection and client
-- Provides `PrismaService` for all database operations
-- Handles connection lifecycle
+**TypeOrmModule** - Database ORM configuration
+- Configured with TypeORM DataSource and entities
+- Provides database connection and entity repositories
+- Auto-loaded in app.module.ts
 
 **TodosModule** - Todos feature
 - `TodosController` - HTTP request handling
 - `TodosService` - Business logic
+- `Todo` Entity - TypeORM entity with decorators
 - DTOs - Request/response validation
 
 ### Request Flow
@@ -447,7 +460,7 @@ Controller (Route handling)
     ↓
 Service (Business logic)
     ↓
-Prisma ORM (Database query)
+TypeORM Repository (Database query)
     ↓
 PostgreSQL Database
     ↓
@@ -537,38 +550,46 @@ JWT_SECRET=your-secret-key
 
 ### Add a New Endpoint
 
-1. Update Prisma schema if needed (`prisma/schema.prisma`)
-2. Run migration: `pnpm exec prisma migrate dev`
-3. Create DTO: `src/modules/todos/dto/new-feature.dto.ts`
-4. Add method to `TodosService`
-5. Add route to `TodosController`
-6. Write tests in `*.spec.ts`
+1. Create a new TypeORM entity if needed: `src/entities/feature.entity.ts`
+2. Update `app.module.ts` to include the new entity in TypeOrmModule
+3. Generate migration: `pnpm exec typeorm migration:generate src/database/migrations/AddFeature`
+4. Run migration: `pnpm exec typeorm migration:run`
+5. Create DTO: `src/modules/todos/dto/new-feature.dto.ts`
+6. Add method to `TodosService` using TypeORM repository
+7. Add route to `TodosController`
+8. Write tests in `*.spec.ts`
 
 ### Modify Database Schema
 
 ```bash
-# Edit schema
-vim prisma/schema.prisma
+# Update entity decorators
+vim src/entities/todo.entity.ts
 
-# Create migration
-pnpm exec prisma migrate dev --name describe_changes
+# Generate migration (TypeORM creates the migration file automatically)
+pnpm exec typeorm migration:generate src/database/migrations/DescribeChanges
+
+# Run migration
+pnpm exec typeorm migration:run
 
 # Review and commit migration files
-git add prisma/migrations/
+git add src/database/migrations/
 git commit -m "feat: update database schema"
 ```
 
 ### Debug Database Issues
 
 ```bash
-# View database in web UI
-pnpm exec prisma studio
+# Check TypeORM configuration
+cat ormconfig.json or check app.module.ts
 
-# Check migration status
-pnpm exec prisma migrate status
+# Verify database connection
+pnpm exec typeorm query:show
 
-# Create seed data
-pnpm exec prisma db seed
+# Revert migrations if needed
+pnpm exec typeorm migration:revert
+
+# Synchronize schema (development only)
+pnpm exec typeorm schema:sync
 ```
 
 ## 🚢 Deployment
@@ -598,7 +619,7 @@ PORT=3000
 Always run migrations before deploying:
 
 ```bash
-pnpm exec prisma migrate deploy
+pnpm exec typeorm migration:run
 ```
 
 ## 👥 Contributing
@@ -614,7 +635,7 @@ pnpm exec prisma migrate deploy
 
 - [NestJS Documentation](https://docs.nestjs.com)
 - [Fastify Documentation](https://www.fastify.io)
-- [Prisma Documentation](https://www.prisma.io/docs)
+- [TypeORM Documentation](https://typeorm.io)
 - [TypeScript Documentation](https://www.typescriptlang.org)
 - [PostgreSQL Documentation](https://www.postgresql.org/docs)
 

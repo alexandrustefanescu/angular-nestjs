@@ -58,7 +58,7 @@ turbo-mono/
               common/     # Shared utilities
               main.ts     # App bootstrap
           test/           # E2E tests
-          prisma/         # Database schema & migrations
+          database/       # Database configuration & migrations
 
    packages/
       types/             # Shared TypeScript types & DTOs
@@ -176,9 +176,9 @@ The frontend is built with Angular 21's latest patterns:
 ### Backend Architecture
 
 The backend follows NestJS best practices:
-- **Modular Structure:** Feature-based modules (Todos, Prisma)
+- **Modular Structure:** Feature-based modules (Todos, Database)
 - **Fastify:** High-performance HTTP server with security middleware
-- **TypeORM:** Type-safe database ORM
+- **TypeORM:** Type-safe database ORM with decorators
 - **DTOs:** Request/response validation using class-validator
 - **Swagger:** Auto-generated API documentation
 - **Global Pipes:** Automatic validation and transformation
@@ -297,26 +297,39 @@ docker-compose up -d
 ```bash
 cd apps/backend
 
-# Generate Prisma Client
-pnpm exec prisma generate
+# Create TypeORM migrations after schema changes
+pnpm exec typeorm migration:generate src/database/migrations/InitialMigration
 
-# Run migrations
-pnpm exec prisma migrate dev
+# Run database migrations
+pnpm exec typeorm migration:run
 
-# View database in Prisma Studio
-pnpm exec prisma studio
+# View database with TypeORM CLI
+pnpm exec typeorm schema:sync
 ```
 
 ### Database Schema
 
-```prisma
-model Todo {
-  id          Int     @id @default(autoincrement())
-  title       String
-  description String?
-  isCompleted Boolean @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+The Todo entity is defined using TypeORM decorators in `src/entities/todo.entity.ts`:
+
+```typescript
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+
+@Entity('todos')
+export class Todo {
+  @PrimaryGeneratedColumn('increment')
+  id: number;
+
+  @Column('varchar', { length: 255 })
+  title: string;
+
+  @Column('boolean', { default: false })
+  isCompleted: boolean;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
 ```
 
@@ -444,8 +457,8 @@ API_URL = 'http://localhost:3001/v1'
 
 - [Angular Documentation](https://angular.io)
 - [NestJS Documentation](https://docs.nestjs.com)
-- [Prisma Documentation](https://www.prisma.io/docs)
 - [TypeORM Documentation](https://typeorm.io)
+- [PostgreSQL Documentation](https://www.postgresql.org/docs)
 - [Turborepo Documentation](https://turbo.build/repo/docs)
 
 ## 📄 License
