@@ -27,6 +27,7 @@
     "frontend:dev": "turbo dev --filter=frontend",
     "frontend:lint": "turbo lint --filter=frontend",
     "frontend:test": "turbo test --filter=frontend",
+    "frontend:test-browser": "turbo test-browser --filter=frontend",
     "db:migration:run": "turbo db:migration:run --filter=backend",
     "db:migration:reset": "turbo db:migration:revert --filter=backend",
     "db:schema:sync": "turbo db:schema:sync --filter=backend",

@@ -40,6 +40,9 @@
       "persistent": true
     },
     "test:e2e": {},
+    "test-browser": {
+      "cache": false
+    },
     "db:migration:run": {
       "cache": false
     },
