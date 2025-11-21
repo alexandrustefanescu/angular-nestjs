@@ -19,7 +19,7 @@ export class DatabaseConfigService implements TypeOrmOptionsFactory {
       migrations: [__dirname + '/../migrations/*{.ts,.js}'],
       migrationsTableName: 'migrations',
       synchronize: this.configService.get('NODE_ENV') === 'development',
-      logging: this.configService.get('NODE_ENV') === 'development',
+      logging: false,
       dropSchema: false,
     };
   }
