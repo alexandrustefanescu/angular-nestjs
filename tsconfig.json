@@ -1,0 +1,9 @@
+{
+  "extends": "./packages/typescript-config/base.json",
+  "compilerOptions": {
+    "paths": {
+      "@packages/*": ["./packages/*/src"]
+    }
+  }
+}
+

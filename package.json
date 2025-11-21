@@ -1,0 +1,54 @@
+{
+  "name": "angular-nestjs",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "turbo format",
+    "test": "turbo test",
+    "test:watch": "turbo test:watch",
+    "test:cov": "turbo test:cov",
+    "test:e2e": "turbo test:e2e",
+    "clean": "rm -rf .turbo node_modules pnpm-lock.yaml",
+    "clean:full": "rm -rf .turbo node_modules pnpm-lock.yaml dist apps/*/.turbo apps/*/coverage apps/*/dist apps/*/node_modules apps/*/.next packages/*/.turbo packages/*/dist packages/*/node_modules",
+    "install:backend": "pnpm --filter=backend install",
+    "install:frontend": "pnpm --filter=frontend install",
+    "backend:build": "turbo build --filter=backend",
+    "backend:dev": "turbo dev --filter=backend",
+    "backend:lint": "turbo lint --filter=backend",
+    "backend:start": "turbo start --filter=backend",
+    "backend:start:debug": "turbo start:debug --filter=backend",
+    "backend:start:prod": "turbo start:prod --filter=backend",
+    "backend:test": "turbo test --filter=backend",
+    "backend:test:watch": "turbo test:watch --filter=backend",
+    "frontend:build": "turbo build --filter=frontend",
+    "frontend:dev": "turbo dev --filter=frontend",
+    "frontend:lint": "turbo lint --filter=frontend",
+    "frontend:test": "turbo test --filter=frontend",
+    "db:migration:run": "turbo db:migration:run --filter=backend",
+    "db:migration:reset": "turbo db:migration:revert --filter=backend",
+    "db:schema:sync": "turbo db:schema:sync --filter=backend",
+    "db:schema:drop": "turbo db:schema:drop --filter=backend",
+    "db:reset": "turbo db:reset --filter=backend",
+    "db:query": "turbo db:query --filter=backend",
+    "db:seed": "turbo db:seed --filter=backend",
+    "db:up": "cd apps/backend && docker-compose up -d",
+    "db:down": "cd apps/backend && docker-compose down",
+    "db:logs": "cd apps/backend && docker-compose logs -f postgres"
+  },
+  "dependencies": {
+    "rxjs": "^7.8.1",
+    "tslib": "^2.8.1"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "turbo": "^2.6.1",
+    "typescript": "5.7.3"
+  },
+  "packageManager": "pnpm@10.22.0+sha512.bf049efe995b28f527fd2b41ae0474ce29186f7edcb3bf545087bd61fbbebb2bf75362d1307fda09c2d288e1e499787ac12d4fcb617a974718a6051f2eee741c",
+  "engines": {
+    "node": ">=20"
+  }
+}

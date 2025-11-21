@@ -1,0 +1,9 @@
+{
+  "name": "@packages/typescript-config",
+  "version": "0.0.1",
+  "description": "Shared TypeScript configuration for the workspace",
+  "private": true,
+  "files": [
+    "base.json"
+  ]
+}
