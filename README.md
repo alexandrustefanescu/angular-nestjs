@@ -29,7 +29,11 @@ A modern, production-ready monorepo showcasing a complete full-stack Todo Manage
 pnpm install
 
 # Start PostgreSQL database
-docker-compose up -d
+pnpm db:up
+# Run TypeORM Migration
+pnpm db:migration:run
+# Seed PostgreSQL Database with data
+pnpm db:seed
 
 # Run all applications in development mode
 pnpm dev
@@ -170,7 +174,7 @@ The frontend is built with Angular 21's latest patterns:
 - **Standalone Components:** All components are standalone, removing the need for NgModules
 - **Server-Side Rendering:** Angular Universal provides SSR for better performance and SEO
 - **Services:** Reactive TodosService communicates with backend API
-- **Routing:** Simple routing from `/todos` (main) and `/creator` (create new)
+- **Routing:** Simple routing from `/todos` (main) and `/contact` (create new)
 - **Styling:** Tailwind CSS utilities with custom theme
 
 ### Backend Architecture

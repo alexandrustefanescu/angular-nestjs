@@ -14,6 +14,10 @@
     "check-types": {
       "dependsOn": ["^check-types"]
     },
+    "install": {
+      "cache": false,
+      "persistent": true
+    },
     "dev": {
       "cache": false,
       "persistent": true
