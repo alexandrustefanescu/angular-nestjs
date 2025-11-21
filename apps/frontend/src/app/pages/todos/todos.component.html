@@ -1,0 +1,55 @@
+<div class="max-w-4xl mx-auto p-8 space-y-5">
+  <h1>CRUD App</h1>
+
+  <div class="inline-flex gap-4 items-center my-10 w-full">
+    <mat-form-field class="w-full">
+      <mat-label>Add a new todo</mat-label>
+      <input matInput type="text" [field]="newTodoForm.title" (keyup.enter)="addTodo()" />
+      @if (newTodoForm.title().value()) {
+        <button
+          matSuffix
+          matIconButton
+          aria-label="Clear"
+          (click)="newTodoForm.title().value.set('')"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+      @if (newTodoForm.title().touched() && newTodoForm.title().invalid()) {
+        <mat-error>
+          @for (error of newTodoForm.title().errors(); track error) {
+            {{ error.message }}
+          }
+        </mat-error>
+      }
+    </mat-form-field>
+
+    <button mat-raised-button color="secondary" (click)="addTodo()">
+      <mat-icon>add</mat-icon>
+      Add
+    </button>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    @for (todo of todosResource.value(); track todo.id) {
+      <div
+        class="flex items-center gap-4 p-4 bg-white/5 rounded-lg transition-all hover:bg-white/10"
+        [class.opacity-70]="todo.isCompleted"
+      >
+        <mat-checkbox [checked]="todo.isCompleted" (change)="toggleTodo(todo)" color="primary">
+        </mat-checkbox>
+        <span
+          class="flex-1"
+          [class.line-through]="todo.isCompleted"
+          [class.opacity-60]="todo.isCompleted"
+          >{{ todo.title }}</span
+        >
+        <button mat-icon-button (click)="deleteTodo(todo.id)" aria-label="Delete todo">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    }
+  </div>
+
+  <app-tech-stack />
+</div>

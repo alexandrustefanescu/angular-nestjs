@@ -1,0 +1,58 @@
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((color: (theme-type: dark,
+        primary: (0: #000000,
+          10: #1a1a1a,
+          20: #2d2d2d,
+          25: #383838,
+          30: #434343,
+          35: #4f4f4f,
+          40: #5c5c5c,
+          50: #767676,
+          60: #919191,
+          70: #adadad,
+          80: #c9c9c9,
+          90: #e6e6e6,
+          95: #f3f3f3,
+          98: #fafafa,
+          99: #fcfcfc,
+          100: #ffffff,
+        ),
+        tertiary: (0: #000000,
+          10: #1a1a1a,
+          20: #2d2d2d,
+          25: #383838,
+          30: #434343,
+          35: #4f4f4f,
+          40: #5c5c5c,
+          50: #767676,
+          60: #919191,
+          70: #adadad,
+          80: #c9c9c9,
+          90: #e6e6e6,
+          95: #f3f3f3,
+          98: #fafafa,
+          99: #fcfcfc,
+          100: #ffffff,
+        ),
+      ),
+      typography: (plain-family: 'Inter',
+        brand-family: 'Phudu',
+      ),
+      density: 0,
+    ));
+}
+
+body {
+  // Use dark color scheme for black and white theme
+  color-scheme: dark;
+
+  // Set black background and white text for monochrome appearance
+  background-color: #000000;
+  color: #ffffff;
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin
+  margin: 0;
+}

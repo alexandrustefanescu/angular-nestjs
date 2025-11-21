@@ -1,0 +1,40 @@
+<mat-accordion>
+  <mat-expansion-panel
+    class="border"
+    (opened)="panelOpenState.set(true)"
+    (closed)="panelOpenState.set(false)"
+  >
+    <mat-expansion-panel-header class="justfiy-between! flex!">
+      <mat-panel-title class="font-bold! text-purple-400!"> Angular </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <ul>
+      <li>ESBuild</li>
+      <li>Vitest</li>
+      <li>Signal Forms</li>
+      <li>Angular Material</li>
+      <li>TailwindCSS</li>
+      <li>Playwright</li>
+    </ul>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel
+    class="border"
+    (opened)="panelOpenState.set(true)"
+    (closed)="panelOpenState.set(false)"
+  >
+    <mat-expansion-panel-header>
+      <mat-panel-title class="font-bold! text-red-600!"> Nestjs </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <ul>
+      <li>Fastify Adapter</li>
+      <li>SWC Compiler</li>
+      <li>Vitest</li>
+      <li>Swagger</li>
+      <li>CORS</li>
+      <li>CSRF</li>
+      <li>Helmet</li>
+    </ul>
+  </mat-expansion-panel>
+</mat-accordion>

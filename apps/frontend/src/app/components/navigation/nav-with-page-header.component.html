@@ -1,0 +1,59 @@
+<mat-sidenav-container class="w-full h-full">
+    @if (isHandset$ | async) {
+    <mat-sidenav #drawer mode="over">
+        <mat-toolbar class="border-b border-outline-variant">
+            <img priority class="size-8" width="32" height="32" ngSrc="https://ui.angular-material.dev/app-ui/logo.svg" alt="Your Company" />
+            <button mat-icon-button (click)="toggleMenu()" class="ml-auto">
+                <mat-icon matListItemIcon>menu_opened</mat-icon>
+            </button>
+        </mat-toolbar>
+        <mat-list>
+            @for (item of navigation; track item) {
+            <a mat-list-item [routerLink]="item.href" routerLinkActive="bg-gray-500!" #rla="routerLinkActive"
+                [attr.aria-current]="rla.isActive ? 'page' : undefined">
+                {{ item.name }}
+            </a>
+            }
+            <mat-divider />
+        </mat-list>
+    </mat-sidenav>
+    }
+
+    <mat-sidenav-content class="min-h-full text-white">
+        <mat-toolbar class="px-0! border-b border-outline-variant">
+            <div class="flex-1 w-full max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8">
+                <div class="flex gap-2">
+                    <img priority class="size-8" width="32" height="32" ngSrc="https://ui.angular-material.dev/app-ui/logo.svg" alt="Your Company" />
+                    <p class="text-purple-400 font-bold">Angular 21</p>
+                </div>
+
+                @if ((isHandset$ | async) === false) {
+                <div class="ml-10">
+                    <div class="flex items-baseline space-x-4">
+                        @for (item of navigation; track item) {
+                        <a matButton [routerLink]="item.href" routerLinkActive="bg-neutral-800!" #rla="routerLinkActive"
+                            class="text-white!" [attr.aria-current]="rla.isActive ? 'page' : undefined">
+                            {{ item.name }}
+                        </a>
+                        }
+                    </div>
+                </div>
+                }
+                @if (isHandset$ | async) {
+                <button mat-icon-button (click)="toggleMenu()" class="ml-auto">
+                    <mat-icon>menu</mat-icon>
+                </button>
+                }
+            </div>
+        </mat-toolbar>
+
+        <div class="flex flex-col min-h-[calc(100vh-64px)]">
+            <main class="flex-1">
+                <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                    <ng-content></ng-content>
+                </div>
+            </main>
+            <app-footer />
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>
