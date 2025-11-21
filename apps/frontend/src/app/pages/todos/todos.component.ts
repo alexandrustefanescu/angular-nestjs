@@ -23,7 +23,6 @@ interface TodoFormData {
 export class TodosComponent {
   private todosService = inject(TodosService);
 
-  // Signal-based form for creating todos
   private newTodoModel = signal<TodoFormData>({ title: '' });
   newTodoForm = form(this.newTodoModel, (f) => {
     required(f.title, { message: 'Todo title is required' });
