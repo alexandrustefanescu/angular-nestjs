@@ -21,7 +21,10 @@ import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 
 @ApiTags('todos')
-@Controller('todos')
+@Controller({
+  version: '1',
+  path: 'todos',
+})
 export class TodosController {
   constructor(private readonly todosService: TodosService) {}
 

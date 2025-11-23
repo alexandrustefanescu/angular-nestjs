@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
@@ -14,7 +14,9 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter({ logger: true }),
   );
-  app.setGlobalPrefix('v1');
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Backend REST API')
@@ -25,7 +27,7 @@ async function bootstrap() {
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('v1/api', app, documentFactory, {
+  SwaggerModule.setup('api/docs', app, documentFactory, {
     customSiteTitle: 'Backend API Documentation',
     customfavIcon: 'https://nestjs.com/img/logo-small.svg',
     customCss: '.swagger-ui .topbar { display: none }',
@@ -56,7 +58,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(port, '0.0.0.0');
 
-  console.log(`🚀 Server is running on: http://localhost:${port}/v1`);
+  console.log(`🚀 Server is running on: http://localhost:${port}`);
   console.log(`📚 Swagger docs available at: http://localhost:${port}/v1/api`);
 }
 void bootstrap();
