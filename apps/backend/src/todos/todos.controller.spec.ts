@@ -42,7 +42,7 @@ describe('TodosController', () => {
     vi.clearAllMocks();
   });
 
-  describe('POST /todos', () => {
+  describe('POST /v1/todos', () => {
     it('should create a todo and return it', async () => {
       const createTodoDto: CreateTodoDto = {
         title: 'Test Todo',
@@ -78,7 +78,7 @@ describe('TodosController', () => {
     });
   });
 
-  describe('GET /todos', () => {
+  describe('GET /v1/todos', () => {
     it('should return all todos', async () => {
       const todos: Todo[] = [
         mockTodo,
@@ -107,7 +107,7 @@ describe('TodosController', () => {
     });
   });
 
-  describe('GET /todos/:id', () => {
+  describe('GET /v1/todos/:id', () => {
     it('should return a todo by id', async () => {
       const mockFindOne = vi
         .spyOn(service, 'findOne')
@@ -133,7 +133,7 @@ describe('TodosController', () => {
     });
   });
 
-  describe('PATCH /todos/:id', () => {
+  describe('PATCH /v1/todos/:id', () => {
     it('should update a todo', async () => {
       const updateTodoDto: UpdateTodoDto = { title: 'Updated Todo' };
       const updatedTodo: Todo = { ...mockTodo, title: 'Updated Todo' };
@@ -179,7 +179,7 @@ describe('TodosController', () => {
     });
   });
 
-  describe('DELETE /todos/:id', () => {
+  describe('DELETE /v1/todos/:id', () => {
     it('should delete a todo', async () => {
       const mockRemove = vi
         .spyOn(service, 'remove')
