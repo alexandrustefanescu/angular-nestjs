@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule } from './database/database.module';
-import { TodosModule } from './todos/todos.module';
-import { validate } from './config/env.validation';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { validate } from './config/env.validation';
+import { DatabaseModule } from './database/database.module';
+import { HealthModule } from './health/health.module';
+import { TodosModule } from './todos/todos.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
     ]),
     DatabaseModule,
     TodosModule,
+    HealthModule,
   ],
 })
 export class AppModule {}
