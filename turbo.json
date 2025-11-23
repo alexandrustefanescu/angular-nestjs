@@ -5,12 +5,14 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "lint": {
       "dependsOn": ["^lint"]
     },
-    "format": {},
+    "format": {
+      "cache": false
+    },
     "check-types": {
       "dependsOn": ["^check-types"]
     },
@@ -20,30 +22,42 @@
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "interruptible": true
     },
     "start": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "interruptible": true
     },
     "start:debug": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "interruptible": true
     },
     "start:prod": {
       "cache": false
     },
-    "test": {},
+    "test": {
+      "cache": true
+    },
     "test:watch": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "interruptible": true
     },
-    "test:cov": {},
+    "test:cov": {
+      "cache": true,
+      "outputs": ["coverage/**"]
+    },
     "test:debug": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "interruptible": true
     },
-    "test:e2e": {},
+    "test:e2e": {
+      "cache": false
+    },
     "test-browser": {
       "cache": false
     },
